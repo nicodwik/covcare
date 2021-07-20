@@ -42,12 +42,16 @@
                 <p class="mb-1">Jadwal Vaksinasi</p>
                 <h4 class="mt-0 mb-3 time-result"></h4>
             
+                <p class="mb-1">Tempat Vaksinasi</p>
+                <h4 class="mt-0 mb-3 place-result"></h4>
+            
                 <p class="mb-1">Status</p>
                 <div class="alert mt-0 mb-3 status-result" role="alert">
                 </div>
                 <div class="collapse" id="collapseExample">
                     <div class="card" id="qrcode-result">
                     </div>
+                    <p class="text-center">Tunjukkan QR Code kepada panitia sebagai bukti kehadiran</p>
                 </div>
                 <div class="form-group mt-2 mb-0 text-center">
                     <button class="btn btn-primary btn-block" id="btn-qrcode" data-toggle="collapse" data-target="#collapseExample" disabled>
@@ -79,14 +83,15 @@
                 .then(response => {
                     if(response.data.status == 'success') {
                         $('.alert-danger').hide()
-                        let {registrant, time, status, color} = response.data.data
+                        let {registrant, schedule, status, color} = response.data.data
                         form.hide()
                         result.show()
                         $('.name-result').empty().append(`<b>${registrant.name}</b>`)
                         $('.phone-result').empty().append(`<b>${registrant.phone}</b>`)
                         $('.nik-result').empty().append(`<b>${registrant.nik.substr(0,4)}xxxxxxxxxxx</b>`)
                         $('.address-result').empty().append(`<b>${registrant.address}</b>`)
-                        $('.time-result').empty().append(`<b>${time}</b>`)
+                        $('.time-result').empty().append(`<b>${schedule.date} (${schedule.time})</b>`)
+                        $('.place-result').empty().append(`<b>${schedule.address}</b>`)
                         $('.status-result').addClass(color).empty().append(`<b>${status}</b>`)
                         $('#qrcode-result').empty().append(`<img src="${registrant.qr_code}" alt="" height="100%" width="100%">`)
                         qrcode.prop('disabled', true).empty().append(spinner)
