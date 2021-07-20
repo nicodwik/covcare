@@ -60,19 +60,12 @@ class AuthController extends Controller
                         'time' => Carbon::parse($checkVaccine->date)->isoFormat('dddd, Do MMMM Y') . ' (' . $checkVaccine->time . ')',
                         'status' => 'MENUNGGU KONFIRMASI'
                     ]);
-                    return response()->json([
-                        'status' => 'success'
-                    ]);
+                    return response()->json(['status' => 'success']);
                 } else {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'Stok Vaksin Habis'
-                    ]);
+                    return response()->json(['status' => 'error']);
                 }
             } catch (\Exception $th) {
-                return response()->json([
-                    'message' => $th->getMessage()
-                ]);
+                return response()->json(['message' => $th->getMessage()]);
             }
             
         }
