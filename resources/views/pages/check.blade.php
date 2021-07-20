@@ -88,7 +88,7 @@
                         $('.address-result').empty().append(`<b>${registrant.address}</b>`)
                         $('.time-result').empty().append(`<b>${time}</b>`)
                         $('.status-result').addClass(color).empty().append(`<b>${status}</b>`)
-                        $('#qrcode-result').empty().append(`<img src="${registrant.qr_code}" alt="" height="100%">`)
+                        $('#qrcode-result').empty().append(`<img src="${registrant.qr_code}" alt="" height="100%" width="100%">`)
                         qrcode.prop('disabled', true).empty().append(spinner)
                         setTimeout(() => {
                             qrcode.prop('disabled', false).empty().text('Lihat QR Code')
