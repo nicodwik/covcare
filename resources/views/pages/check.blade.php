@@ -16,7 +16,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-text" id="basic-addon1">+62</span>
                         </div>
-                        <input type="number" name="phone" id="phone" class="form-control" placeholder="82xxxxxx">
+                        <input type="number" name="phone" id="phone" class="form-control" placeholder="82xxxxxx" value="{{request()->phone}}">
                       </div>
                 </div>
                 
@@ -84,11 +84,11 @@
                         result.show()
                         $('.name-result').empty().append(`<b>${registrant.name}</b>`)
                         $('.phone-result').empty().append(`<b>${registrant.phone}</b>`)
-                        $('.nik-result').empty().append(`<b>${registrant.nik}</b>`)
+                        $('.nik-result').empty().append(`<b>${registrant.nik.substr(0,4)}xxxxxxxxxxx</b>`)
                         $('.address-result').empty().append(`<b>${registrant.address}</b>`)
                         $('.time-result').empty().append(`<b>${time}</b>`)
                         $('.status-result').addClass(color).empty().append(`<b>${status}</b>`)
-                        $('#qrcode-result').empty().append(`<img src="${registrant.qr_code}" alt="" height="100%" width="100%">`)
+                        $('#qrcode-result').empty().append(`<img src="${registrant.qr_code}" alt="" height="100%">`)
                         qrcode.prop('disabled', true).empty().append(spinner)
                         setTimeout(() => {
                             qrcode.prop('disabled', false).empty().text('Lihat QR Code')

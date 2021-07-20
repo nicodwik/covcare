@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBookingsTable extends Migration
+class CreateSchedulesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,16 @@ class CreateBookingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('bookings', function (Blueprint $table) {
+        Schema::create('schedules', function (Blueprint $table) {
             $table->id();
-            $table->integer('registrant_id')->unsigned();
-            $table->integer('schedule_id')->unsigned();
+            $table->date('date');
             $table->string('time');
-            $table->string('status')->default('MENUNGGU KONFIRMASI');
-            $table->string('cancel_reason')->nullable();
+            $table->integer('event_id')->unsigned();
+            $table->longText('address');
+            $table->string('vaccine');
+            $table->integer('stock');
+            $table->boolean('isActive')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -31,6 +34,6 @@ class CreateBookingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('bookings');
+        Schema::dropIfExists('schedules');
     }
 }

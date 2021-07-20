@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Registrant;
 use App\Models\Booking;
 use App\Models\Vaccine;
+use App\Models\Schedule;
+use \Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -35,27 +37,27 @@ class AuthController extends Controller
             'phone' => 'required|unique:registrants,phone',
             'nik' => 'required',
             'address' => 'required',
-            'time' => 'required',
+            'schedule' => 'required',
         ]);
         if($validated->fails()) {
             return response()->json([
                 'status' => 'validation-error',
-                'message' => 'Harap lengkapi data!'
+                'message' => $validated->errors()->first()
             ]);
         } else {
             try {
-                $registrant = $request->except('time');
-                $checkVaccine = Vaccine::first();
+                $registrant = $request->except('schedule');
+                $checkVaccine = Schedule::findOrFail($request->schedule);
                 if($checkVaccine->stock > 0) {
                     $checkVaccine->update([
                         'stock' => $checkVaccine->stock - 1
                     ]);
-                    $registrant['qr_code'] = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' . route('check') . '?phone='. $request->phone;
+                    $registrant['qr_code'] = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' . route('check') . '?phone='. ltrim($request->phone, '+62');
                     $dataRegistrant = Registrant::create($registrant);
                     Booking::create([
                         'registrant_id' => $dataRegistrant->id,
-                        'vaccine_id' => $checkVaccine->id,
-                        'time' => $request->time,
+                        'schedule_id' => $checkVaccine->id,
+                        'time' => Carbon::parse($checkVaccine->date)->isoFormat('dddd, Do MMMM Y') . ' (' . $checkVaccine->time . ')',
                         'status' => 'MENUNGGU KONFIRMASI'
                     ]);
                     return response()->json([

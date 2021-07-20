@@ -12,13 +12,13 @@ class Booking extends Model
     protected $table = 'bookings';
     protected $guarded = [];
 
-    /**
-     * Get the user that owns the Booking
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function registrant()
     {
         return $this->belongsTo(Registrant::class, 'registrant_id', 'id');
+    }
+
+    public function schedule()
+    {
+        return $this->belongsTo(Schedule::class, 'schedule_id', 'id');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Booking;
+use App\Models\Schedule;
 
 class BookingController extends Controller
 {
@@ -24,5 +25,20 @@ class BookingController extends Controller
                 'message' => 'Data tidak ditemukan'
             ]);
         }
+    }
+
+    public function quotaCheck(Request $request)
+    {
+        try {
+            $check = Schedule::findOrFail($request->schedule_id);
+            if($check->stock > 0) {
+                return response()->json(['status' => 'success']);
+            } else {
+                return response()->json(['status' => 'error']);
+            }
+        } catch (\Exception $th) {
+            return response()->json(['message' => $th->getMessage()]);
+        }
+        
     }
 }

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\FrontpageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,13 +20,12 @@ use App\Http\Controllers\BookingController;
 Route::get('/', function () {
     return view('layouts.main');
 });
-Route::get('/daftar', function () {
-    return view('pages.register');
-});
+Route::get('/daftar', [FrontpageController::class, 'register']);
 Route::get('/cek-status', function () {
     return view('pages.check');
-})->name('check-page');
+})->name('check.page');
 Route::get('/status-check', [BookingController::class, 'check'])->name('check');
+Route::get('/quota-check', [BookingController::class, 'quotaCheck'])->name('quota.check');
 Route::get('/login', function () {
     return view('pages.login');
 })->name('login-page');
