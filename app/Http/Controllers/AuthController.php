@@ -40,31 +40,39 @@ class AuthController extends Controller
         if($validated->fails()) {
             return response()->json([
                 'status' => 'validation-error',
-                'message' => $validated->errors()->first()
+                'message' => 'Harap lengkapi data!'
             ]);
         } else {
-            $registrant = $request->except('time');
-            $checkVaccine = Vaccine::first();
-            if($checkVaccine->stock > 0) {
-                $checkVaccine->update([
-                    'stock' => $checkVaccine->stock - 1
-                ]);
-                $dataRegistrant = Registrant::create($registrant);
-                Booking::create([
-                    'registrant_id' => $dataRegistrant->id,
-                    'vaccine_id' => $checkVaccine->id,
-                    'time' => $request->time,
-                    'status' => 'MENUNGGU KONFIRMASI'
-                ]);
+            try {
+                $registrant = $request->except('time');
+                $checkVaccine = Vaccine::first();
+                if($checkVaccine->stock > 0) {
+                    $checkVaccine->update([
+                        'stock' => $checkVaccine->stock - 1
+                    ]);
+                    $registrant['qr_code'] = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' . route('check') . '?phone='. $request->phone;
+                    $dataRegistrant = Registrant::create($registrant);
+                    Booking::create([
+                        'registrant_id' => $dataRegistrant->id,
+                        'vaccine_id' => $checkVaccine->id,
+                        'time' => $request->time,
+                        'status' => 'MENUNGGU KONFIRMASI'
+                    ]);
+                    return response()->json([
+                        'status' => 'success'
+                    ]);
+                } else {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Stok Vaksin Habis'
+                    ]);
+                }
+            } catch (\Exception $th) {
                 return response()->json([
-                    'status' => 'success'
-                ]);
-            } else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Stok Vaksin Habis'
+                    'message' => $th->getMessage()
                 ]);
             }
+            
         }
     }
 }

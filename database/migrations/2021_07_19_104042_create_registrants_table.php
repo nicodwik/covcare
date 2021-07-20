@@ -19,6 +19,7 @@ class CreateRegistrantsTable extends Migration
             $table->string('phone');
             $table->string('nik');
             $table->longText('address');
+            $table->string('qr_code');
             $table->softDeletes();
             $table->timestamps();
         });

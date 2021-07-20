@@ -25,22 +25,22 @@
                 </div>
                 <div class="form-group">
                     <label for="password">Nomor Induk Kependuudkan (NIK)</label>
-                    <input class="form-control" type="number" name="nik" id="nik" required id="password" placeholder="NIK anda">
+                    <input class="form-control" type="number" name="nik" id="nik" required id="password" placeholder="NIK Anda">
                 </div>
                 <div class="form-group">
                     <label for="address">Alamat lengkap</label>
-                    <textarea name="" id="address" cols="30" rows="5" name="address" class="form-control" placeholder="Alamat anda"></textarea>
+                    <textarea name="" id="address" cols="30" rows="5" name="address" class="form-control" placeholder="Alamat Anda"></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="address">Pilih Waktu</label>
+                    <label for="address">Pilih Jadwal</label>
                     <select name="" id="time" class="form-control" onchange="checkQuota()" name="time">
-                        <option value="" selected disabled>Pilih Waktu Anda</option>
+                        <option value="" selected disabled>Pilih Jadwal Anda</option>
                         <option value="Senin, 2 Agustus 2021 (12.00 - 15.00)">Senin, 2 Agustus 2021 (12.00 - 15.00)</option>
                         <option value="Selasa, 3 Agustus 2021 (12.00 - 15.00)">Selasa, 3 Agustus 2021 (12.00 - 15.00)</option>
                         <option value="Rabu, 4 Agustus 2021 (12.00 - 15.00)">Rabu 4 Agustus 2021 (12.00 - 15.00)</option>
                     </select>
                 </div>
-                <div class="result-quota"></div>
+                <div class="result-quota text-center"></div>
                     <div class="alert alert-success pass" role="alert" style="display: none">
                         Kuota tersedia, silahkan melanjutkan pendaftaran
                     </div>
@@ -83,13 +83,14 @@
 @section('post-script')
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
+        const spinner = `<div class="ml-1 spinner-border spinner-border-sm" role="status" style="color: white;">
+                <span class="sr-only">Loading...</span>
+                </div>`
         function checkQuota() {
             let pass = $('.pass')
             pass.hide()
             let result = $('.result-quota')
-            result.text('Memeriksa Kuota').append(`<div class="ml-1 spinner-border spinner-border-sm" role="status" style="color: white;">
-                <span class="sr-only">Loading...</span>
-                </div>`)
+            result.text('Memeriksa Kuota').append('<br>').append(spinner)
             setTimeout(() => {
                 result.text('')
                 pass.show()
@@ -98,9 +99,7 @@
         }
 
         function successSubmit(){
-            $('#btn-submit').text('').append(`<div class="spinner-border spinner-border-sm" role="status" style="color: white;">
-                <span class="sr-only">Loading...</span>
-                </div>`)
+            $('#btn-submit').prop('disabled', true).text('').append(spinner)
             axios.post('{{route('register')}}', {
                 _token: '{{csrf_token()}}',
                 name: $('#name').val(),
@@ -109,30 +108,24 @@
                 address: $('#address').val(),
                 time: $('#time').val(),
             }).then(response => {
-                console.log(response.data)
                 if(response.data.status == 'success') {
+                    $('.alert-danger').hide()
                     $('#form').hide()
                     $('#success-message').show()
                 } else if(response.data.status == 'error'){
+                    $('.alert-danger').hide()
                     $('#form').hide()
                     $('#failure-message').show()
-                } else {
+                } else if(response.data.status == 'validation-error'){
                     $('.alert-danger').show().text(response.data.message)
                     $('#btn-submit').text('Daftar')
+                } else {
+                    alert(response.data.message)
                 }
             }).catch(e => {
                 console.log(e)
                 alert(e.message)
             })
         }
-        // function failureSubmit(){
-        //     $('#btn-submit').text('').append(`<div class="spinner-border spinner-border-sm" role="status" style="color: white;">
-        //         <span class="sr-only">Loading...</span>
-        //         </div>`)
-        //     setTimeout(() => {
-        //         $('#form').hide()
-        //         $('#failure-message').show()
-        //     }, 2000);
-        // }
     </script>
 @endsection
