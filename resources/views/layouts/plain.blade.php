@@ -17,7 +17,7 @@
 
     </head>
 
-    <body class="authentication-bg">
+    <body style="background-color: #919191">
 
         <div class="account-pages mt-5 mb-5">
             <div class="container">

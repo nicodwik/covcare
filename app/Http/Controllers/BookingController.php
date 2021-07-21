@@ -15,8 +15,8 @@ class BookingController extends Controller
             $data = Booking::whereHas('registrant', function ($q) use($request) {
                 $q->where('phone', '+62' . $request->phone);
             })->with('registrant', 'schedule')->first();
-            $data->schedule->date = Carbon::parse($data->schedule->date)->isoFormat('dddd, Do MMMM Y'); 
             if($data) {
+                $data->schedule->date = Carbon::parse($data->schedule->date)->isoFormat('dddd, Do MMMM Y'); 
                 $data['status'] == 'MENUNGGU KONFIRMASI' ? $data['color'] = 'alert-warning' : ($data['status'] == 'TERDAFTAR' ? $data['color'] = 'alert-success' : $data['color'] = 'alert-danger');
                 return response()->json([
                     'status' => 'success',
@@ -44,6 +44,22 @@ class BookingController extends Controller
             }
         } catch (\Exception $th) {
             return response()->json(['message' => $th->getMessage()]);
+        }
+        
+    }
+
+    public function confirmAtendee(Request $request)
+    {
+        try {
+            $data = Booking::findOrFail($request->booking_id);
+            if($data->isConfirmed == 0) {
+                $data->update([
+                    'isConfirmed' => 1
+                ]);
+                return response()->json(['status' => 'success', 'message' => 'Telah Dikonfirmasi']);
+            }
+        } catch (\Exception $th) {
+            return response()->json(['status' => 'error', 'message' => $th->getMessage()]);
         }
         
     }

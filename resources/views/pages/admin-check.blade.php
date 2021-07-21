@@ -7,6 +7,8 @@
             <div class="text-center mb-4">
                 <h4 class="text-uppercase mt-0">Status Pendaftaran</h4>
             </div>
+            <div class="alert mt-0 mb-3 confirmation-result" role="alert" style="display: none">
+            </div>
             <div class="alert alert-danger" role="alert" style="display: none">
             </div>
             <form action="#" method="get" id="form-check">
@@ -19,7 +21,6 @@
                         <input type="number" name="phone" id="phone" class="form-control" placeholder="82xxxxxx" value="{{request()->phone}}">
                       </div>
                 </div>
-                
                 
                 <div class="form-group mt-2 mb-0 text-center">
                     <button class="btn btn-primary btn-block" id="btn-submit" type="button" onclick="checkRegistrant()"> Cek Status </button>
@@ -48,20 +49,35 @@
                 <p class="mb-1">Status</p>
                 <div class="alert mt-0 mb-3 status-result" role="alert">
                 </div>
-                <div class="collapse" id="collapseExample">
-                    <div class="card" id="qrcode-result">
-                    </div>
-                    <p class="text-center">Tunjukkan QR Code kepada panitia sebagai bukti kehadiran</p>
-                </div>
+
+                <input type="hidden" id="booking-id".val()>
                 <div class="form-group mt-2 mb-0 text-center">
-                    <button class="btn btn-primary btn-block" id="btn-qrcode" data-toggle="collapse" data-target="#collapseExample" disabled>
-                    </button>
+                    <button class="btn btn-primary btn-block" id="btnShowSubmitModal" data-toggle="modal" data-target="#showSubmitModal">Konfirmasi Kehadiran</button>
                 </div>
                 <div class="form-group mt-2 mb-0 text-center">
                     <button class="btn btn-outline-white btn-block btn-back" onclick="back()" type="button">Kembali </button>
                 </div>
             </div>
-
+            <!-- Modal -->
+            <div class="modal fade" id="showSubmitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Konfirmasi Kehadiran</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                            Anda Yakin?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-white w-50" data-dismiss="modal">Kembali</button>
+                            <button type="button" class="btn btn-primary w-50" id="btn-confirm">Konfirmasi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div> <!-- end card-body -->
        
     </div>
@@ -77,15 +93,21 @@
             let btn = $('#btn-submit')
             let form = $('#form-check')
             let result = $('#status-result')
-            let qrcode =  $('#btn-qrcode')
             btn.text('').append(spinner)
             axios.get('{{route('check')}}?phone=' + $('#phone').val())
                 .then(response => {
                     if(response.data.status == 'success') {
                         $('.alert-danger').hide()
-                        let {registrant, schedule, status, color} = response.data.data
+                        let {id, registrant, schedule, status, isConfirmed, color} = response.data.data
                         form.hide()
                         result.show()
+                        if(isConfirmed) {
+                            $('.confirmation-result').addClass('alert-success').empty().append(`<b>Telah Dikonfirmasi</b>`).show()
+                            $('#btnShowSubmitModal').prop('disabled', true)
+                        } else {
+                            $('.confirmation-result').addClass('alert-danger').empty().append(`<b>Belum Dikonfirmasi</b>`).show()
+                            $('#btnShowSubmitModal').prop('disabled', false)
+                        }
                         $('.name-result').empty().append(`<b>${registrant.name}</b>`)
                         $('.phone-result').empty().append(`<b>${registrant.phone}</b>`)
                         $('.nik-result').empty().append(`<b>${registrant.nik.substr(0,4)}xxxxxxxxxxx</b>`)
@@ -94,10 +116,7 @@
                         $('.place-result').empty().append(`<b>${schedule.address}</b>`)
                         $('.status-result').addClass(color).empty().append(`<b>${status}</b>`)
                         $('#qrcode-result').empty().append(`<img src="${registrant.qr_code}" alt="" height="100%" width="100%">`)
-                        qrcode.prop('disabled', true).empty().append(spinner)
-                        setTimeout(() => {
-                            qrcode.prop('disabled', false).empty().text('Lihat QR Code')
-                        }, 3000);
+                        $('#booking-id').val('').val(id)
                     } else {
                         $('.alert-danger').show().text(response.data.message)
                         $('#btn-submit').text('Cek Status')
@@ -108,13 +127,25 @@
                     alert(e.message)
                 })
         }
+        $('#btn-confirm').click(function() {
+            $(this).prop('disabled', true).text('').append(spinner)
+            axios.get('{{route('confirm.atendee')}}?booking_id=' + $('#booking-id').val())
+                .then(response => {
+                let {status, messsage} = response.data
+                if(status == 'success') {
+                    $('#showSubmitModal').modal('hide')
+                    $('.confirmation-result').empty().removeClass('alert-success').removeClass('alert-danger').addClass('alert-success').append(`<b>${response.data.message}</b>`).show()
+                } else if(status == 'error') {
+                    alert(message)
+                }
+            })
+        })
         function back() {
             $('#form-check').show()
             $('#status-result').hide()
             $('#btn-submit').text('Cek Status')
             $('#phone').val('')
-            $('#collapseExample').collapse('hide')
+            $('.confirmation-result').removeClass('alert-success').removeClass('alert-danger').hide().empty()
         }
-      
     </script>
 @endsection

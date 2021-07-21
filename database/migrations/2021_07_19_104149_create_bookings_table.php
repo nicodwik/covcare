@@ -20,6 +20,7 @@ class CreateBookingsTable extends Migration
             $table->string('time');
             $table->string('status')->default('MENUNGGU KONFIRMASI');
             $table->string('cancel_reason')->nullable();
+            $table->boolean('isConfirmed')->default(false);
             $table->timestamps();
         });
     }

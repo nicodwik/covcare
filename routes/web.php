@@ -26,11 +26,15 @@ Route::get('/cek-status', function () {
 })->name('check.page');
 Route::get('/status-check', [BookingController::class, 'check'])->name('check');
 Route::get('/quota-check', [BookingController::class, 'quotaCheck'])->name('quota.check');
+Route::get('confirm-atendee', [BookingController::class, 'confirmAtendee'])->name('confirm.atendee');
 Route::get('/login', function () {
     return view('pages.login');
-})->name('login-page');
+})->name('login.page');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware(['auth.user'])->group(function () {
+    Route::get('/cek-status', function () {
+        return view('pages.admin-check');
+    })->name('admin.check.page');
     Route::get('dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 });
