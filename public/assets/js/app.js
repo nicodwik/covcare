@@ -198,6 +198,69 @@ function($) {
     
 }(window.jQuery),
 
+
+function ($) {
+    "use strict";
+
+    var RightSidebar = function () { 
+        this.$bootstrapStylesheet = $('#bootstrap-stylesheet'),
+        this.$appStylesheet = $('#app-stylesheet'),
+        this.$originalBSStylesheet = $('#bootstrap-stylesheet').attr('href'),
+        this.$originalAppStylesheet = $('#app-stylesheet').attr('href');
+    };
+
+    RightSidebar.prototype.init = function() {
+        var self = this;
+
+        $("#light-mode-switch").on('change', function() {
+            if (this.checked) {
+                self.$bootstrapStylesheet.attr('href', self.$originalBSStylesheet);
+                self.$appStylesheet.attr('href', self.$originalAppStylesheet);
+
+                $("#dark-mode-switch").prop('checked', false);
+                $("#rtl-mode-switch").prop('checked', false);
+                $("#dark-rtl-mode-switch").prop('checked', false);
+            }
+        });
+
+        $("#dark-mode-switch").on('change', function() {
+            if (this.checked) {
+                self.$bootstrapStylesheet.attr('href', $(this).data('bsstyle'));
+                self.$appStylesheet.attr('href',  $(this).data('appstyle'));
+
+                $("#light-mode-switch").prop('checked', false);
+                $("#rtl-mode-switch").prop('checked', false);
+                $("#dark-rtl-mode-switch").prop('checked', false);
+            }
+        });
+
+        $("#rtl-mode-switch").on('change', function() {
+            if (this.checked) {
+                self.$bootstrapStylesheet.attr('href', self.$originalBSStylesheet);
+                self.$appStylesheet.attr('href',  $(this).data('appstyle'));
+
+                $("#light-mode-switch").prop('checked', false);
+                $("#dark-mode-switch").prop('checked', false);
+                $("#dark-rtl-mode-switch").prop('checked', false);
+            }
+        });
+
+        $("#dark-rtl-mode-switch").on('change', function() {
+            if (this.checked) {
+                self.$bootstrapStylesheet.attr('href', $(this).data('bsstyle'));
+                self.$appStylesheet.attr('href',  $(this).data('appstyle'));
+
+                $("#light-mode-switch").prop('checked', false);
+                $("#rtl-mode-switch").prop('checked', false);
+                $("#dark-mode-switch").prop('checked', false);
+            }
+        });
+    },
+
+    $.RightSidebar = new RightSidebar, $.RightSidebar.Constructor = RightSidebar
+
+}(window.jQuery),
+
 function ($) {
     'use strict';
 
@@ -272,6 +335,19 @@ function ($) {
             var pageUrl = window.location.href.split(/[?#]/)[0];
             if (this.href == pageUrl) {
                 $(this).addClass("active");
+                $(this).parent().addClass("mm-active"); // add active to li of the current link
+                $(this).parent().parent().addClass("mm-show");
+                $(this).parent().parent().prev().addClass("active"); // add active class to an anchor
+                $(this).parent().parent().parent().addClass("mm-active");
+                $(this).parent().parent().parent().parent().addClass("mm-show"); // add active to li of the current link
+                $(this).parent().parent().parent().parent().parent().addClass("mm-active");
+            }
+        });
+
+        $(".navigation-menu a").each(function () {
+            var pageUrl = window.location.href.split(/[?#]/)[0];
+            if (this.href == pageUrl) {  
+                $(this).addClass("active");
                 $(this).parent().addClass("active"); // add active to li of the current link
                 $(this).parent().parent().addClass("in");
                 $(this).parent().parent().prev().addClass("active"); // add active class to an anchor
@@ -285,6 +361,15 @@ function ($) {
         $('.navbar-toggle').on('click', function (event) {
             $(this).toggleClass('open');
             $('#navigation').slideToggle(400);
+        });
+
+        $('.navigation-menu>li').slice(-2).addClass('last-elements');
+
+        $('.navigation-menu li.has-submenu a[href="#"]').on('click', function (e) {
+            if ($(window).width() < 992) {
+                e.preventDefault();
+                $(this).parent('li').toggleClass('open').find('.submenu:first').toggleClass('open');
+            }
         });
 
         // Preloader
@@ -315,6 +400,10 @@ function ($) {
         $.Portlet.init();
         this.initMenu();
         $.Components.init();
+
+        // right sidebar
+        $.RightSidebar.init();
+
         // on window resize, make menu flipped automatically
         $this.$window.on('resize', function (e) {
             e.preventDefault();

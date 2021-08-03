@@ -51,7 +51,7 @@
                     <button class="btn btn-primary btn-block" id="btn-submit" type="button" disabled onclick="successSubmit()"> Daftar </button>
                 </div>
                 <div class="form-group mt-2 mb-0 text-center">
-                    <a href="{{route('check.page')}}" class="btn btn-outline-white btn-block">Lihat Status Pendaftaran </a>
+                    <a href="{{route('check.page')}}" class="btn btn-outline-secondary btn-block">Lihat Status Pendaftaran </a>
                 </div>
             </form>
 
@@ -65,7 +65,7 @@
                 <p class="mb-0">Selalu terapkan 3M (mangan, mangan, masker)</p>
             </div>
             <div class="form-group mt-2 mb-0 text-center">
-                <a href="{{route('check.page')}}" class="btn btn-outline-white btn-block">Lihat Status Pendaftaran </a>
+                <a href="{{route('check.page')}}" class="btn btn-outline-secondary btn-block">Lihat Status Pendaftaran </a>
             </div>
         </div>
 
@@ -77,7 +77,7 @@
                 <p class="mb-0">Selalu terapkan 3M (mangan, mangan, masker)</p>
             </div>
             <div class="form-group mt-2 mb-0 text-center">
-                <a href="{{route('check.page')}}" class="btn btn-outline-white btn-block">Lihat Status Pendaftaran </a>
+                <a href="{{route('check.page')}}" class="btn btn-outline-secondary btn-block">Lihat Status Pendaftaran </a>
             </div>
         </div>
     </div>
@@ -86,9 +86,7 @@
 @section('post-script')
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
-        const spinner = `<div class="ml-1 spinner-border spinner-border-sm" role="status" style="color: white;">
-                <span class="sr-only">Loading...</span>
-                </div>`
+        const spinner = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
         function checkQuota() {
             let pass = $('.pass')
             let notPass = $('.not-pass')

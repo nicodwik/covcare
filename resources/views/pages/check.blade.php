@@ -58,7 +58,7 @@
                     </button>
                 </div>
                 <div class="form-group mt-2 mb-0 text-center">
-                    <button class="btn btn-outline-white btn-block btn-back" onclick="back()" type="button">Kembali </button>
+                    <button class="btn btn-outline-secondary btn-block btn-back" onclick="back()" type="button">Kembali </button>
                 </div>
             </div>
 

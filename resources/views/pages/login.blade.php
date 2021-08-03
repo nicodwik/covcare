@@ -40,7 +40,7 @@
                 <p class="mb-0">Selalu terapkan 3M (mangan, mangan, masker)</p>
             </div>
             <div class="form-group mt-2 mb-0 text-center">
-                <a href="{{route('check')}}" class="btn btn-outline-white btn-block">Lihat Status Pendaftaran </a>
+                <a href="{{route('check')}}" class="btn btn-outline-secondary btn-block">Lihat Status Pendaftaran </a>
             </div>
         </div>
 
@@ -52,7 +52,7 @@
                 <p class="mb-0">Selalu terapkan 3M (mangan, mangan, masker)</p>
             </div>
             <div class="form-group mt-2 mb-0 text-center">
-                <a href="{{route('check')}}" class="btn btn-outline-white btn-block">Lihat Status Pendaftaran </a>
+                <a href="{{route('check')}}" class="btn btn-outline-secondary btn-block">Lihat Status Pendaftaran </a>
             </div>
         </div>
     </div>

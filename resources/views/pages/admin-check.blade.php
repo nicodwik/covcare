@@ -55,7 +55,7 @@
                     <button class="btn btn-primary btn-block" id="btnShowSubmitModal" data-toggle="modal" data-target="#showSubmitModal">Konfirmasi Kehadiran</button>
                 </div>
                 <div class="form-group mt-2 mb-0 text-center">
-                    <button class="btn btn-outline-white btn-block btn-back" onclick="back()" type="button">Kembali </button>
+                    <button class="btn btn-outline-secondary btn-block btn-back" onclick="back()" type="button">Kembali </button>
                 </div>
             </div>
             <!-- Modal -->
@@ -72,7 +72,7 @@
                             Anda Yakin?
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-white w-50" data-dismiss="modal">Kembali</button>
+                            <button type="button" class="btn btn-outline-secondary w-50" data-dismiss="modal">Kembali</button>
                             <button type="button" class="btn btn-primary w-50" id="btn-confirm">Konfirmasi</button>
                         </div>
                     </div>
